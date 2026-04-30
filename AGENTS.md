@@ -1,81 +1,82 @@
+<!-- From: d:\Game\AGENTS.md -->
 # Game Project — Agent 指南
 
-> 本文档面向 AI Coding Agent。项目当前处于极早期的脚手架阶段，尚未选定具体技术栈。
+> 本文档面向 AI Coding Agent。
 
 ---
 
 ## 项目概述
 
-`Game` 是一个新初始化的游戏项目主仓库，托管于 `git@github.com:870751720/Game.git`。本项目专注于游戏本身的开发，目前**尚未引入任何游戏引擎、编程语言或构建工具**。仓库中当前仅包含以下文件：
-
-- `.gitmodules` —— Git 子模块配置文件
-- `.kimi/` —— Git 子模块（中央 AI 配置库）
-- `README.md` —— 极简说明文件（当前仅剩一行标题）
+`Game` 是一个基于 **Phaser 3 + TypeScript + Vite** 的 2D 网页游戏项目。
 
 ---
 
 ## 技术栈与构建
 
-- **当前状态**：未确定。仓库内不存在 `pyproject.toml`、`package.json`、`Cargo.toml`、`CMakeLists.txt`、`*.csproj`、引擎项目文件等任何构建或包管理配置。
-- **构建命令**：暂无。
-- **运行命令**：暂无。
-- **依赖管理**：暂无。
+- **游戏引擎**: [Phaser 3](https://phaser.io/) (v4.0.0)
+- **编程语言**: TypeScript (v6.0.3)
+- **构建工具**: [Vite](https://vitejs.dev/) (v8.0.10)
+- **包管理器**: npm
 
-> 在引入任何技术栈时，请务必将对应的构建命令、开发服务器启动方式以及依赖安装方式更新到本文件。
+### 常用命令
+
+```bash
+# 安装依赖
+npm install
+
+# 启动开发服务器（带热重载）
+npm run dev
+
+# 生产构建
+npm run build
+
+# 预览生产构建
+npm run preview
+```
 
 ---
 
-## Git Submodule（`.kimi`）
-
-### 说明
-`.kimi` 是指向中央 AI 配置库的子模块：
+## 项目目录结构
 
 ```
-URL: git@github.com:870751720/AI.git
-路径: d:\Game\.kimi
+Game/
+├── index.html              # 入口 HTML
+├── package.json            # 依赖与脚本
+├── tsconfig.json           # TypeScript 配置
+├── vite.config.ts          # Vite 配置
+├── .gitignore
+├── public/                 # 静态资源（直接复制到输出目录）
+│   └── assets/             # 图片、音频、字体等游戏资源
+├── src/
+│   ├── main.ts             # 入口文件：创建 Phaser.Game 实例
+│   ├── gameConfig.ts       # 游戏全局配置（分辨率、物理、场景列表等）
+│   └── scenes/             # 场景目录
+│       └── BootScene.ts    # 启动场景（示例）
 ```
 
-该子模块同样处于极早期阶段，内部包含 `README.md` 及若干目录（`agents/`、`docs/`、`mcp/`、`prompts/`、`rules/`），各目录中均有一个 `.gitkeep` 文件，暂无实际可消费的 Skill 或 Rule 文件。
+### 场景管理
 
-### 常用操作
-```bash
-# 首次克隆后初始化子模块
-git submodule update --init --recursive
-
-# 更新子模块到远程最新
-git submodule update --remote
-
-# 在子模块内提交变更后，回到主仓库提交指针更新
-cd .kimi && git push && cd .. && git add .kimi && git commit -m "chore: update .kimi submodule"
-```
-
-### Agent 操作约束
-
-若 Agent 修改了 `.kimi` 子模块内的任何内容，**必须完整执行以下四步**，不得遗漏主仓库的 push：
-
-1. 在 `.kimi` 内 `git add` → `git commit` → `git push`
-2. 回到主仓库 `git add .kimi` → `git commit` → `git push`
-
-仅完成子模块 push 而未同步主仓库指针的，视为操作未完成。
+- 所有场景放在 `src/scenes/` 下。
+- 在 `src/gameConfig.ts` 的 `scene` 数组中注册新场景。
+- 场景切换使用 `this.scene.start('SceneKey')`。
 
 ---
 
 ## 开发规范
 
 - **文档语言**：项目内的注释、文档、README、提交信息等均使用**中文**。
-- **提交信息风格**：历史提交遵循了简单的 Conventional Commits 风格，例如：
-  - `chore: init Game project structure`
-  - `docs: add README`
-  - `chore: remove preset dirs, keep only .kimi submodule and README`
-  - `chore: 清理 README 文件，移除多余内容`
-- **代码风格**：暂无既定规范。引入具体编程语言后，请在 `.kimi/rules/` 或项目根目录添加对应配置（如 `.editorconfig`、ESLint、Ruff、Clippy 等），并同步更新本文件。
+- **提交信息风格**：遵循 Conventional Commits，例如：
+  - `feat: 添加玩家移动逻辑`
+  - `fix: 修复碰撞检测偏移`
+  - `chore: 更新 .kimi submodule`
+- **代码风格**：使用 TypeScript 严格模式；场景类继承 `Phaser.Scene`；优先使用 Arcade 物理引擎。
 
 ---
 
 ## 测试策略
 
-- 当前无任何测试框架或测试文件。
-- 选定技术栈后，请补充测试命令（例如 `pytest`、`cargo test`、`npm test` 等）并说明测试目录约定。
+- 当前未引入测试框架。
+- 需要时建议选用与 Phaser 兼容的方案（如 Jest + ts-jest 或 Playwright 做 E2E）。
 
 ---
 
@@ -83,13 +84,13 @@ cd .kimi && git push && cd .. && git add .kimi && git commit -m "chore: update .
 
 - **子模块安全**：`.kimi` 子模块通过 SSH（`git@github.com`）拉取。在 CI/CD 或自动化环境中需配置好 SSH Key 或改用 HTTPS，以免拉取失败。
 - **密钥与凭证**：项目内不存在 `.env`、密钥文件或敏感配置。若后续添加，请务必将其加入 `.gitignore`，禁止提交到版本控制。
-- **部署流程**：尚未建立。
+- **部署流程**：构建产物位于 `dist/` 目录，可部署到任意静态托管服务（GitHub Pages、Vercel、Netlify 等）。
 
 ---
 
 ## 给 Agent 的提示
 
-1. **不要假设技术栈**：在添加代码前，先检查根目录是否存在引擎或语言特定的配置文件。如果不存在，请与项目维护者确认拟使用的技术栈。
-2. **优先补充基础设施**：在写游戏逻辑之前，建议先建立 `.gitignore`、目录结构、构建脚本和开发文档（GDD）。
-3. **保持中英文一致**：若现有文档为中文，新增文档和注释也应以中文为主。
-4. **子模块隔离**：通用的 AI Skill / Rule 应放到 `.kimi/`（并向上游子模块仓库提交）；
+1. **添加新场景时**：在 `src/scenes/` 创建新文件，并在 `src/gameConfig.ts` 中注册。
+2. **添加资源时**：放入 `public/assets/`，在场景的 `preload()` 中使用 `this.load.*` 加载。
+3. **保持中文一致**：若现有文档为中文，新增文档和注释也应以中文为主。
+4. **子模块隔离**：通用的 AI Skill / Rule 应放到 `.kimi/`（并向上游子模块仓库提交）；游戏业务代码留在主仓库。
