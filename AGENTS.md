@@ -49,6 +49,15 @@ git submodule update --remote
 cd .kimi && git push && cd .. && git add .kimi && git commit -m "chore: update .kimi submodule"
 ```
 
+### Agent 操作约束
+
+若 Agent 修改了 `.kimi` 子模块内的任何内容，**必须完整执行以下四步**，不得遗漏主仓库的 push：
+
+1. 在 `.kimi` 内 `git add` → `git commit` → `git push`
+2. 回到主仓库 `git add .kimi` → `git commit` → `git push`
+
+仅完成子模块 push 而未同步主仓库指针的，视为操作未完成。
+
 ---
 
 ## 开发规范
