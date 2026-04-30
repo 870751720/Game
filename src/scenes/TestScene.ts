@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser';
 import { SceneKeys } from '../constants/SceneKeys';
+import { AssetKeys } from '../constants/AssetKeys';
 
 /**
  * 测试页面场景
@@ -14,6 +15,17 @@ export class TestScene extends Phaser.Scene {
 
   constructor() {
     super({ key: SceneKeys.TestScene });
+  }
+
+  preload(): void {
+    // 加载 Barbarian 01 Idle 序列（12 帧）
+    const baseKey = AssetKeys.Character.Barbarian01Idle;
+    for (let i = 1; i <= 12; i++) {
+      const num = i.toString().padStart(3, '0');
+      const frameKey = `${baseKey}_${num}`;
+      const path = `assets/characters/barbarian_01/idle/barbarian_01_idle_${num}.png`;
+      this.load.image(frameKey, path);
+    }
   }
 
   create(): void {
@@ -138,7 +150,30 @@ export class TestScene extends Phaser.Scene {
       }
     });
 
-    // 8. 进入动画
+    // 8. 注册 Barbarian Idle 动画（仅首次）
+    const animKey = `${AssetKeys.Character.Barbarian01Idle}_anim`;
+    if (!this.anims.exists(animKey)) {
+      const idleFrames = [];
+      for (let i = 1; i <= 12; i++) {
+        const num = i.toString().padStart(3, '0');
+        idleFrames.push({ key: `${AssetKeys.Character.Barbarian01Idle}_${num}` });
+      }
+      this.anims.create({
+        key: animKey,
+        frames: idleFrames,
+        frameRate: 10,
+        repeat: -1,
+      });
+    }
+
+    // 9. 播放角色动画（放在画面底部）
+    const firstFrameKey = `${AssetKeys.Character.Barbarian01Idle}_001`;
+    const sprite = this.add.sprite(width / 2, height - 80, firstFrameKey);
+    sprite.setName('barbarian_sprite');
+    sprite.setScale(0.4);
+    sprite.play(animKey);
+
+    // 10. 进入动画
     this.cameras.main.fadeIn(400, 0, 0, 0);
 
     // 监听窗口大小变化
@@ -260,5 +295,11 @@ export class TestScene extends Phaser.Scene {
     this.hintText.setPosition(w / 2, h / 2 + 90);
     this.goButton.setPosition(w / 2, h / 2 + 140);
     this.cardBg.setPosition(w / 2, h / 2);
+
+    // 重新定位角色 sprite（通过场景查找）
+    const sprite = this.children.getByName('barbarian_sprite') as Phaser.GameObjects.Sprite;
+    if (sprite) {
+      sprite.setPosition(w / 2, h - 80);
+    }
   }
 }
