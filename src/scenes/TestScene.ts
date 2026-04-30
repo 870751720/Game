@@ -19,11 +19,11 @@ export class TestScene extends Phaser.Scene {
 
   preload(): void {
     // 加载 Barbarian 01 Idle 序列（12 帧）
-    const baseKey = AssetKeys.Character.Barbarian01Idle;
+    const baseKey = AssetKeys.Character.BarbarianIdle;
     for (let i = 1; i <= 12; i++) {
       const num = i.toString().padStart(3, '0');
       const frameKey = `${baseKey}_${num}`;
-      const path = `assets/characters/barbarian_01/idle/barbarian_01_idle_${num}.png`;
+      const path = `assets/characters/barbarian/idle/barbarian_idle_${num}.png`;
       this.load.image(frameKey, path);
     }
   }
@@ -151,12 +151,12 @@ export class TestScene extends Phaser.Scene {
     });
 
     // 8. 注册 Barbarian Idle 动画（仅首次）
-    const animKey = `${AssetKeys.Character.Barbarian01Idle}_anim`;
+    const animKey = `${AssetKeys.Character.BarbarianIdle}_anim`;
     if (!this.anims.exists(animKey)) {
       const idleFrames = [];
       for (let i = 1; i <= 12; i++) {
         const num = i.toString().padStart(3, '0');
-        idleFrames.push({ key: `${AssetKeys.Character.Barbarian01Idle}_${num}` });
+        idleFrames.push({ key: `${AssetKeys.Character.BarbarianIdle}_${num}` });
       }
       this.anims.create({
         key: animKey,
@@ -167,7 +167,7 @@ export class TestScene extends Phaser.Scene {
     }
 
     // 9. 播放角色动画（放在画面底部）
-    const firstFrameKey = `${AssetKeys.Character.Barbarian01Idle}_001`;
+    const firstFrameKey = `${AssetKeys.Character.BarbarianIdle}_001`;
     const sprite = this.add.sprite(width / 2, height - 80, firstFrameKey);
     sprite.setName('barbarian_sprite');
     sprite.setScale(0.4);

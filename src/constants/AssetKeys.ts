@@ -2,13 +2,13 @@
  * 资产键名常量
  * 所有 Phaser 加载/引用资源的 key 必须在这里定义，禁止硬编码
  *
- * 命名规范见: .kimi/rules/asset-naming-convention.md
+ * 命名规范见: docs/asset-naming-convention.md
  */
 
 export const AssetKeys = {
   /** 角色序列帧 */
   Character: {
-    Barbarian01Idle: 'char_barbarian_01_idle',
+    BarbarianIdle: 'char_barbarian_idle',
   },
 
   /** 静态精灵 */

@@ -157,6 +157,43 @@ export const AssetKeys = {
 } as const;
 ```
 
+### 4.3 逐帧序列的帧键名
+
+当角色动画由多张序列帧组成时，每一帧的加载键名格式为：
+
+```
+{asset_key}_{frame}
+```
+
+- `asset_key`：该动作在 `AssetKeys` 中定义的基础键名（如 `char_barbarian_01_idle`）
+- `frame`：帧序号，3 位数字，与文件名保持一致
+
+**示例**：
+```
+char_barbarian_idle_001
+char_barbarian_idle_002
+...
+char_barbarian_idle_012
+```
+
+### 4.4 动画（Animation）键名
+
+注册 `this.anims.create` 时使用的动画键名格式为：
+
+```
+{asset_key}_anim
+```
+
+**示例**：
+```typescript
+this.anims.create({
+  key: 'char_barbarian_idle_anim',
+  frames: [/* ... */],
+  frameRate: 10,
+  repeat: -1,
+});
+```
+
 ---
 
 ## 5. 迁移与新增流程
