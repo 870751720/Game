@@ -1,0 +1,3 @@
+[submodule ".kimi"]
+	path = .kimi
+	url = git@github.com:870751720/AI.git

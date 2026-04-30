@@ -13,7 +13,7 @@ Game/
 │   ├── npc-behaviors/     # NPC 行为树配置
 │   ├── dialogue-trees/    # 对话系统数据
 │   └── prompts/           # 游戏内运行时 Prompt
-└── ai-toolkit/            # [Git Submodule] 引用中央 AI 配置库
+└── .kimi/                 # [Git Submodule] 引用中央 AI 配置库
 ```
 
 ## AI 集成
@@ -24,5 +24,5 @@ Game/
 git submodule update --init --recursive
 ```
 
-- **通用 AI 配置**（如代码审查 Skill、编程规则）→ 见 `ai-toolkit/`
+- **通用 AI 配置**（如代码审查 Skill、编程规则）→ 见 `.kimi/`
 - **游戏专属 AI 配置**（如 NPC 行为、对话数据）→ 见 `ai-config/`
