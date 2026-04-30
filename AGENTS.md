@@ -1,15 +1,9 @@
 <!-- From: d:\Game\AGENTS.md -->
 # Game Project — Agent 指南
 
-> 本文档面向 AI Coding Agent。
-
----
-
 ## 项目概述
 
 `Game` 是一个基于 **Phaser 3 + TypeScript + Vite** 的 2D 网页游戏项目。
-
----
 
 ## 技术栈与构建
 
@@ -27,7 +21,5 @@
   - `chore: 更新 .kimi submodule`
 ---
 
-## 给 Agent 的提示
-1. **保持中文一致**：若现有文档为中文，新增文档和注释也应以中文为主。
-2. **子模块隔离**：通用的 AI Skill / Rule 应放到 `.kimi/`（并向上游子模块仓库提交）；游戏业务代码留在主仓库。
-3. **记忆系统**：Agent 在会话开始时读取 `.kimi/memory/INDEX.md`，按需加载记忆。长任务结束后自动归档到 `memory/sessions/`；被纠正时更新 `memory/learnings.md`。
+## Agent必须遵守
+1. **强制加载记忆**：每次会话开始时，必须先读取 `.kimi/memory/INDEX.md`，并按索引加载所有标记为必读的记忆文件，然后再执行用户请求。
