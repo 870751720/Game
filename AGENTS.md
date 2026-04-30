@@ -34,34 +34,6 @@ npm run build
 npm run preview
 ```
 
----
-
-## 项目目录结构
-
-```
-Game/
-├── index.html              # 入口 HTML
-├── package.json            # 依赖与脚本
-├── tsconfig.json           # TypeScript 配置
-├── vite.config.ts          # Vite 配置
-├── .gitignore
-├── public/                 # 静态资源（直接复制到输出目录）
-│   └── assets/             # 图片、音频、字体等游戏资源
-├── src/
-│   ├── main.ts             # 入口文件：创建 Phaser.Game 实例
-│   ├── gameConfig.ts       # 游戏全局配置（分辨率、物理、场景列表等）
-│   └── scenes/             # 场景目录
-│       └── BootScene.ts    # 启动场景（示例）
-```
-
-### 场景管理
-
-- 所有场景放在 `src/scenes/` 下。
-- 在 `src/gameConfig.ts` 的 `scene` 数组中注册新场景。
-- 场景切换使用 `this.scene.start('SceneKey')`。
-
----
-
 ## 开发规范
 
 - **文档语言**：项目内的注释、文档、README、提交信息等均使用**中文**。
@@ -94,3 +66,4 @@ Game/
 2. **添加资源时**：放入 `public/assets/`，在场景的 `preload()` 中使用 `this.load.*` 加载。
 3. **保持中文一致**：若现有文档为中文，新增文档和注释也应以中文为主。
 4. **子模块隔离**：通用的 AI Skill / Rule 应放到 `.kimi/`（并向上游子模块仓库提交）；游戏业务代码留在主仓库。
+5. **记忆系统**：Agent 在会话开始时读取 `.kimi/memory/INDEX.md`，按需加载记忆。长任务结束后自动归档到 `memory/sessions/`；被纠正时更新 `memory/learnings.md`。
