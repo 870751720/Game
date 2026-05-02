@@ -13,9 +13,17 @@ const OUTPUT_TS_DIR = path.join(__dirname, '..', 'src', 'data');
 function parseTable(lines, startIdx) {
   const tableLines = [];
   let i = startIdx;
-  while (i < lines.length && lines[i].trim().startsWith('|')) {
-    tableLines.push(lines[i]);
-    i++;
+  while (i < lines.length) {
+    const trimmed = lines[i].trim();
+    if (trimmed.startsWith('|')) {
+      tableLines.push(lines[i]);
+      i++;
+    } else if (trimmed === '' && (i + 1 < lines.length && lines[i + 1].trim().startsWith('|'))) {
+      // 跳过表格中间的空行，避免数据被截断
+      i++;
+    } else {
+      break;
+    }
   }
 
   if (tableLines.length < 3) return null; // 至少要有表头、分隔行、一行数据

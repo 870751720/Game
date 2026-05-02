@@ -212,7 +212,7 @@ export class TestScene extends Phaser.Scene {
     lookManager.loadParts(outfitPartTableData);
 
     // 构造默认存档（新角色初始状态）
-    const defaultSave: CharacterLookSave = CharacterLookManager.createEmptySave('barbarian_default');
+    const defaultSave: CharacterLookSave = CharacterLookManager.createEmptySave('barbarian_02_default');
     const config = lookManager.getConfig(defaultSave.baseId);
 
     // 创建 PlayerDisplay（使用配表中的默认纹理前缀）

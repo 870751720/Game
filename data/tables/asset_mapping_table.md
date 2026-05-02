@@ -22,7 +22,6 @@
 | texture_key | file_path | category |
 |:---|:---|:---|
 | barbarian_02_body | assets/characters/barbarian_02/body.png | character |
-
 | barbarian_02_head | assets/characters/barbarian_02/head.png | character |
 | barbarian_02_left_arm | assets/characters/barbarian_02/left_arm.png | character |
 | barbarian_02_left_hand | assets/characters/barbarian_02/left_hand.png | character |
@@ -46,7 +45,6 @@
 | barbarian_01_shield | assets/characters/barbarian_01/shield.png | character |
 | barbarian_01_weapon | assets/characters/barbarian_01/weapon.png | character |
 | barbarian_03_body | assets/characters/barbarian_03/body.png | character |
-
 | barbarian_03_head | assets/characters/barbarian_03/head.png | character |
 | barbarian_03_left_arm | assets/characters/barbarian_03/left_arm.png | character |
 | barbarian_03_left_hand | assets/characters/barbarian_03/left_hand.png | character |
