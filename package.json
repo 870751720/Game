@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "export-data": "node scripts/export-tables.js"
   },
   "repository": {
     "type": "git",
