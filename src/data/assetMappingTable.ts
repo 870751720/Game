@@ -1,7 +1,6 @@
 // ============================================
 // 由导表脚本自动生成，请勿手动修改
 // 源文件: data/tables/asset_mapping_table.md
-// 生成时间: 2026-05-02T13:55:53.464Z
 // ============================================
 
 /** 字段定义 */
@@ -57,13 +56,13 @@ export const assetMappingTableData: AssetMappingTable[] = [
     "category": "character"
   },
   {
-    "textureKey": "common_shield_02",
-    "filePath": "assets/characters/common/shield/shield_02.png",
+    "textureKey": "common_off_hand_02",
+    "filePath": "assets/characters/common/off_hand/off_hand_02.png",
     "category": "character"
   },
   {
-    "textureKey": "common_weapon_02",
-    "filePath": "assets/characters/common/weapon/weapon_02.png",
+    "textureKey": "common_main_hand_02",
+    "filePath": "assets/characters/common/main_hand/main_hand_02.png",
     "category": "character"
   },
   {
@@ -122,13 +121,13 @@ export const assetMappingTableData: AssetMappingTable[] = [
     "category": "character"
   },
   {
-    "textureKey": "common_shield_01",
-    "filePath": "assets/characters/common/shield/shield_01.png",
+    "textureKey": "common_off_hand_01",
+    "filePath": "assets/characters/common/off_hand/off_hand_01.png",
     "category": "character"
   },
   {
-    "textureKey": "common_weapon_01",
-    "filePath": "assets/characters/common/weapon/weapon_01.png",
+    "textureKey": "common_main_hand_01",
+    "filePath": "assets/characters/common/main_hand/main_hand_01.png",
     "category": "character"
   },
   {
@@ -172,13 +171,13 @@ export const assetMappingTableData: AssetMappingTable[] = [
     "category": "character"
   },
   {
-    "textureKey": "common_shield_03",
-    "filePath": "assets/characters/common/shield/shield_03.png",
+    "textureKey": "common_off_hand_03",
+    "filePath": "assets/characters/common/off_hand/off_hand_03.png",
     "category": "character"
   },
   {
-    "textureKey": "common_weapon_03",
-    "filePath": "assets/characters/common/weapon/weapon_03.png",
+    "textureKey": "common_main_hand_03",
+    "filePath": "assets/characters/common/main_hand/main_hand_03.png",
     "category": "character"
   }
 ];

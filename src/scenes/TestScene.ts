@@ -317,14 +317,14 @@ export class TestScene extends Phaser.Scene {
         textures: ['common_right_leg_01', 'common_right_leg_02', 'common_right_leg_03'],
       },
       {
-        label: '武器',
-        timeline: 'Weapon',
-        textures: ['common_weapon_01', 'common_weapon_02', 'common_weapon_03'],
+        label: '主手',
+        timeline: 'Main Hand',
+        textures: ['common_main_hand_01', 'common_main_hand_02', 'common_main_hand_03'],
       },
       {
-        label: '盾牌',
-        timeline: 'Shield',
-        textures: ['common_shield_01', 'common_shield_02', 'common_shield_03'],
+        label: '副手',
+        timeline: 'Off Hand',
+        textures: ['common_off_hand_01', 'common_off_hand_02', 'common_off_hand_03'],
       },
     ];
 

@@ -29,9 +29,9 @@
 | barbarian_01_default | right_hand | common_right_hand_01 |
 | barbarian_01_default | left_leg | common_left_leg_01 |
 | barbarian_01_default | right_leg | common_right_leg_01 |
-| barbarian_01_default | weapon | common_weapon_01 |
-| barbarian_01_default | shield | common_shield_01 |
-| barbarian_01_default | face | common_face_01 |
+| barbarian_01_default | main_hand | common_main_hand_01 |
+| barbarian_01_default | off_hand | common_off_hand_01 |
+| barbarian_01_default | face | common_face_03 |
 | barbarian_02_default | body | common_body_02 |
 | barbarian_02_default | head | common_head_02 |
 | barbarian_02_default | left_arm | common_left_arm_02 |
@@ -40,9 +40,9 @@
 | barbarian_02_default | right_hand | common_right_hand_02 |
 | barbarian_02_default | left_leg | common_left_leg_02 |
 | barbarian_02_default | right_leg | common_right_leg_02 |
-| barbarian_02_default | weapon | common_weapon_02 |
-| barbarian_02_default | shield | common_shield_02 |
-| barbarian_02_default | face | common_face_01 |
+| barbarian_02_default | main_hand | common_main_hand_02 |
+| barbarian_02_default | off_hand | common_off_hand_02 |
+| barbarian_02_default | face | common_face_03 |
 | barbarian_03_default | body | common_body_03 |
 | barbarian_03_default | head | common_head_03 |
 | barbarian_03_default | left_arm | common_left_arm_03 |
@@ -51,6 +51,6 @@
 | barbarian_03_default | right_hand | common_right_hand_03 |
 | barbarian_03_default | left_leg | common_left_leg_03 |
 | barbarian_03_default | right_leg | common_right_leg_03 |
-| barbarian_03_default | weapon | common_weapon_03 |
-| barbarian_03_default | shield | common_shield_03 |
-| barbarian_03_default | face | common_face_01 |
+| barbarian_03_default | main_hand | common_main_hand_03 |
+| barbarian_03_default | off_hand | common_off_hand_03 |
+| barbarian_03_default | face | common_face_03 |

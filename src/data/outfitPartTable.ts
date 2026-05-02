@@ -1,7 +1,6 @@
 // ============================================
 // 由导表脚本自动生成，请勿手动修改
 // 源文件: data/tables/outfit_part_table.md
-// 生成时间: 2026-05-02T13:55:53.471Z
 // ============================================
 
 /** 字段定义 */
@@ -58,18 +57,18 @@ export const outfitPartTableData: OutfitPartTable[] = [
   },
   {
     "outfitId": "barbarian_01_default",
-    "partName": "weapon",
-    "textureKey": "common_weapon_01"
+    "partName": "main_hand",
+    "textureKey": "common_main_hand_01"
   },
   {
     "outfitId": "barbarian_01_default",
-    "partName": "shield",
-    "textureKey": "common_shield_01"
+    "partName": "off_hand",
+    "textureKey": "common_off_hand_01"
   },
   {
     "outfitId": "barbarian_01_default",
     "partName": "face",
-    "textureKey": "common_face_01"
+    "textureKey": "common_face_03"
   },
   {
     "outfitId": "barbarian_02_default",
@@ -113,18 +112,18 @@ export const outfitPartTableData: OutfitPartTable[] = [
   },
   {
     "outfitId": "barbarian_02_default",
-    "partName": "weapon",
-    "textureKey": "common_weapon_02"
+    "partName": "main_hand",
+    "textureKey": "common_main_hand_02"
   },
   {
     "outfitId": "barbarian_02_default",
-    "partName": "shield",
-    "textureKey": "common_shield_02"
+    "partName": "off_hand",
+    "textureKey": "common_off_hand_02"
   },
   {
     "outfitId": "barbarian_02_default",
     "partName": "face",
-    "textureKey": "common_face_01"
+    "textureKey": "common_face_03"
   },
   {
     "outfitId": "barbarian_03_default",
@@ -168,17 +167,17 @@ export const outfitPartTableData: OutfitPartTable[] = [
   },
   {
     "outfitId": "barbarian_03_default",
-    "partName": "weapon",
-    "textureKey": "common_weapon_03"
+    "partName": "main_hand",
+    "textureKey": "common_main_hand_03"
   },
   {
     "outfitId": "barbarian_03_default",
-    "partName": "shield",
-    "textureKey": "common_shield_03"
+    "partName": "off_hand",
+    "textureKey": "common_off_hand_03"
   },
   {
     "outfitId": "barbarian_03_default",
     "partName": "face",
-    "textureKey": "common_face_01"
+    "textureKey": "common_face_03"
   }
 ];
