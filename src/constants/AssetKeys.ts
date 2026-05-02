@@ -8,7 +8,7 @@
 export const AssetKeys = {
   /** 角色序列帧 */
   Character: {
-    BarbarianIdle: 'char_barbarian_idle',
+    // 示例: HeroIdle: 'char_hero_idle',
   },
 
   /** 静态精灵 */

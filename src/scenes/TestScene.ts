@@ -1,6 +1,5 @@
 import * as Phaser from 'phaser';
 import { SceneKeys } from '../constants/SceneKeys';
-import { AssetKeys } from '../constants/AssetKeys';
 import { SCMLParser, PlayerDisplay } from '../objects/player';
 
 /**
@@ -27,15 +26,6 @@ export class TestScene extends Phaser.Scene {
   }
 
   preload(): void {
-    // 加载 Barbarian 01 Idle 序列（12 帧）—— 保留作为参考对比
-    const baseKey = AssetKeys.Character.BarbarianIdle;
-    for (let i = 1; i <= 12; i++) {
-      const num = i.toString().padStart(3, '0');
-      const frameKey = `${baseKey}_${num}`;
-      const path = `assets/characters/barbarian/idle/barbarian_idle_${num}.png`;
-      this.load.image(frameKey, path);
-    }
-
     // 加载 Barbarian 02 骨骼动画资源
     const prefix = 'barbarian_02';
     const partsPath = 'assets/characters/barbarian_02';
