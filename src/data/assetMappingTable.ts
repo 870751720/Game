@@ -1,7 +1,7 @@
 // ============================================
 // 由导表脚本自动生成，请勿手动修改
 // 源文件: data/tables/asset_mapping_table.md
-// 生成时间: 2026-05-02T13:08:00.604Z
+// 生成时间: 2026-05-02T13:18:01.003Z
 // ============================================
 
 /** 字段定义 */
@@ -22,18 +22,8 @@ export const assetMappingTableData: AssetMappingTable[] = [
     "category": "character"
   },
   {
-    "textureKey": "barbarian_02_face_01",
-    "filePath": "assets/characters/barbarian_02/face_01.png",
-    "category": "character"
-  },
-  {
-    "textureKey": "barbarian_02_face_02",
-    "filePath": "assets/characters/barbarian_02/face_02.png",
-    "category": "character"
-  },
-  {
-    "textureKey": "barbarian_02_face_03",
-    "filePath": "assets/characters/barbarian_02/face_03.png",
+    "textureKey": "barbarian_02_face",
+    "filePath": "assets/characters/barbarian_02/face.png",
     "category": "character"
   },
   {
@@ -87,18 +77,8 @@ export const assetMappingTableData: AssetMappingTable[] = [
     "category": "character"
   },
   {
-    "textureKey": "barbarian_01_face_01",
-    "filePath": "assets/characters/barbarian_01/face_01.png",
-    "category": "character"
-  },
-  {
-    "textureKey": "barbarian_01_face_02",
-    "filePath": "assets/characters/barbarian_01/face_02.png",
-    "category": "character"
-  },
-  {
-    "textureKey": "barbarian_01_face_03",
-    "filePath": "assets/characters/barbarian_01/face_03.png",
+    "textureKey": "barbarian_01_face",
+    "filePath": "assets/characters/barbarian_01/face.png",
     "category": "character"
   },
   {
@@ -152,18 +132,8 @@ export const assetMappingTableData: AssetMappingTable[] = [
     "category": "character"
   },
   {
-    "textureKey": "barbarian_03_face_01",
-    "filePath": "assets/characters/barbarian_03/face_01.png",
-    "category": "character"
-  },
-  {
-    "textureKey": "barbarian_03_face_02",
-    "filePath": "assets/characters/barbarian_03/face_02.png",
-    "category": "character"
-  },
-  {
-    "textureKey": "barbarian_03_face_03",
-    "filePath": "assets/characters/barbarian_03/face_03.png",
+    "textureKey": "barbarian_03_face",
+    "filePath": "assets/characters/barbarian_03/face.png",
     "category": "character"
   },
   {

@@ -318,33 +318,6 @@ export class TestScene extends Phaser.Scene {
 
     btnY += Math.ceil(animations.length / btnCols) * btnSpacingY + 20;
 
-    // 表情切换区域
-    this.add
-      .text(panelX, btnY, '😊 表情切换', {
-        fontSize: '18px',
-        color: '#3498db',
-        fontStyle: 'bold',
-      })
-      .setOrigin(0.5);
-
-    btnY += 35;
-
-    const faces = [
-      { label: '表情 1', texture: 'barbarian_02_face_01' },
-      { label: '表情 2', texture: 'barbarian_02_face_02' },
-      { label: '表情 3', texture: 'barbarian_02_face_03' },
-    ];
-
-    faces.forEach((face, idx) => {
-      const bx = panelX - 80 + idx * 80;
-      const btn = this.createSmallButton(bx, btnY, face.label, () => {
-        this.playerDisplay.setPartTexture('Face 01', face.texture);
-      });
-      btn.setScale(0.8);
-    });
-
-    btnY += 50;
-
     // 武器/盾牌切换
     this.add
       .text(panelX, btnY, '🛡️ 装备切换', {

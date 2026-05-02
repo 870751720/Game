@@ -1,7 +1,7 @@
 // ============================================
 // 由导表脚本自动生成，请勿手动修改
 // 源文件: data/tables/outfit_part_table.md
-// 生成时间: 2026-05-02T13:08:00.611Z
+// 生成时间: 2026-05-02T13:18:01.009Z
 // ============================================
 
 /** 字段定义 */
@@ -68,8 +68,8 @@ export const outfitPartTableData: OutfitPartTable[] = [
   },
   {
     "outfitId": "barbarian_01_default",
-    "partName": "face_01",
-    "textureKey": "barbarian_01_face_01"
+    "partName": "face",
+    "textureKey": "barbarian_01_face"
   },
   {
     "outfitId": "barbarian_02_default",
@@ -123,8 +123,8 @@ export const outfitPartTableData: OutfitPartTable[] = [
   },
   {
     "outfitId": "barbarian_02_default",
-    "partName": "face_01",
-    "textureKey": "barbarian_02_face_01"
+    "partName": "face",
+    "textureKey": "barbarian_02_face"
   },
   {
     "outfitId": "barbarian_03_default",
@@ -178,7 +178,7 @@ export const outfitPartTableData: OutfitPartTable[] = [
   },
   {
     "outfitId": "barbarian_03_default",
-    "partName": "face_01",
-    "textureKey": "barbarian_03_face_01"
+    "partName": "face",
+    "textureKey": "barbarian_03_face"
   }
 ];
