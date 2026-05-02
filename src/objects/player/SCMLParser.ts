@@ -49,6 +49,88 @@ export class SCMLParser {
     return { folders, entity };
   }
 
+  /**
+   * 合并多个 SCMLData 的动画到一个数据中
+   *
+   * 要求所有数据具有相同的 folder 结构和骨骼定义（obj_info），
+   * 通常它们是由同一个源文件拆分出来的。
+   *
+   * @param sources 多个 SCMLData，第一个作为基础
+   */
+  static mergeAnimations(sources: SCMLData[]): SCMLData {
+    if (sources.length === 0) {
+      throw new Error('SCMLParser.mergeAnimations: 至少需要提供一个 SCMLData');
+    }
+
+    const base = sources[0];
+    const merged: SCMLData = {
+      folders: base.folders,
+      entity: {
+        id: base.entity.id,
+        name: base.entity.name,
+        boneInfos: base.entity.boneInfos,
+        animations: [...base.entity.animations],
+      },
+    };
+
+    const seenNames = new Set(base.entity.animations.map((a) => a.name));
+
+    for (let i = 1; i < sources.length; i++) {
+      const other = sources[i];
+      this.validateCompatible(base, other, i);
+
+      for (const anim of other.entity.animations) {
+        if (seenNames.has(anim.name)) {
+          throw new Error(`SCMLParser.mergeAnimations: 发现重复动画名 "${anim.name}"`);
+        }
+        seenNames.add(anim.name);
+        merged.entity.animations.push(anim);
+      }
+    }
+
+    // 重新分配连续的 animation id
+    merged.entity.animations.forEach((anim, idx) => {
+      anim.id = idx;
+    });
+
+    return merged;
+  }
+
+  private static validateCompatible(base: SCMLData, other: SCMLData, index: number): void {
+    if (base.folders.length !== other.folders.length) {
+      throw new Error(`SCMLParser.mergeAnimations: 第 ${index} 个数据的 folder 数量不一致`);
+    }
+    for (let f = 0; f < base.folders.length; f++) {
+      const baseFolder = base.folders[f];
+      const otherFolder = other.folders[f];
+      if (baseFolder.files.length !== otherFolder.files.length) {
+        throw new Error(`SCMLParser.mergeAnimations: 第 ${index} 个数据的 folder[${f}] 文件数量不一致`);
+      }
+      for (let fileIdx = 0; fileIdx < baseFolder.files.length; fileIdx++) {
+        const a = baseFolder.files[fileIdx];
+        const b = otherFolder.files[fileIdx];
+        if (a.id !== b.id || a.name !== b.name) {
+          throw new Error(
+            `SCMLParser.mergeAnimations: 第 ${index} 个数据的 folder[${f}] 文件定义不一致 (${a.name} vs ${b.name})`
+          );
+        }
+      }
+    }
+
+    if (base.entity.boneInfos.length !== other.entity.boneInfos.length) {
+      throw new Error(`SCMLParser.mergeAnimations: 第 ${index} 个数据的骨骼数量不一致`);
+    }
+    for (let b = 0; b < base.entity.boneInfos.length; b++) {
+      const a = base.entity.boneInfos[b];
+      const boneB = other.entity.boneInfos[b];
+      if (a.name !== boneB.name) {
+        throw new Error(
+          `SCMLParser.mergeAnimations: 第 ${index} 个数据的骨骼定义不一致 (${a.name} vs ${boneB.name})`
+        );
+      }
+    }
+  }
+
   private static parseFolders(root: Element): SCMLFolder[] {
     const folders: SCMLFolder[] = [];
     const folderElements = root.querySelectorAll('folder');

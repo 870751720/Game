@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 
 const TABLES_DIR = path.join(__dirname, '..', 'data', 'tables');
-const OUTPUT_JSON_DIR = path.join(__dirname, '..', 'public', 'assets', 'data');
 const OUTPUT_TS_DIR = path.join(__dirname, '..', 'src', 'data');
 
 /**
@@ -145,11 +144,9 @@ function toTSType(type) {
  */
 function exportTables() {
   // 确保输出目录存在
-  [OUTPUT_JSON_DIR, OUTPUT_TS_DIR].forEach(dir => {
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-  });
+  if (!fs.existsSync(OUTPUT_TS_DIR)) {
+    fs.mkdirSync(OUTPUT_TS_DIR, { recursive: true });
+  }
 
   const files = fs.readdirSync(TABLES_DIR).filter(f => f.endsWith('.md'));
 
@@ -221,11 +218,7 @@ function exportTables() {
       continue;
     }
 
-    // 1. 输出 JSON
-    const jsonPath = path.join(OUTPUT_JSON_DIR, `${baseName}.json`);
-    fs.writeFileSync(jsonPath, JSON.stringify(jsonData, null, 2), 'utf-8');
-
-    // 2. 输出 TS 类型定义
+    // 输出 TS 类型定义（内联数据，可直接 import 使用）
     const interfaceName = toPascalCase(baseName);
     const constName = toCamelCase(baseName) + 'Data';
     const tsLines = [
@@ -254,14 +247,14 @@ function exportTables() {
 
     tsLines.push('}');
     tsLines.push('');
-    tsLines.push(`/** 运行时加载路径: assets/data/${baseName}.json */`);
-    tsLines.push(`export const ${constName}: ${interfaceName}[] = [];`);
+    tsLines.push(`/** 导表数据，可直接 import 使用 */`);
+    tsLines.push(`export const ${constName}: ${interfaceName}[] = ${JSON.stringify(jsonData, null, 2)};`);
     tsLines.push('');
 
     const tsPath = path.join(OUTPUT_TS_DIR, `${toCamelCase(baseName)}.ts`);
     fs.writeFileSync(tsPath, tsLines.join('\n'), 'utf-8');
 
-    console.log(`✅ ${file} → ${baseName}.json + ${toCamelCase(baseName)}.ts`);
+    console.log(`✅ ${file} → ${toCamelCase(baseName)}.ts`);
   }
 }
 

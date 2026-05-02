@@ -15,8 +15,11 @@ export interface PlayerDisplayConfig {
   /** SCML 动画数据 */
   scmlData: SCMLData;
 
-  /** 纹理 key 前缀（如 'barbarian_02'） */
+  /** 纹理 key 前缀（如 'barbarian_02'），作为未映射部件的默认回退 */
   texturePrefix: string;
+
+  /** 部件纹理映射表：部件名（如 'body'）→ Phaser 纹理 key */
+  partTextures?: Record<string, string>;
 
   /** 整体缩放，默认 1 */
   scale?: number;
@@ -50,11 +53,18 @@ export class PlayerDisplay extends Phaser.GameObjects.Container {
   /** 纹理前缀 */
   private texturePrefix: string;
 
+  /** 部件名 → 纹理 key 映射（用于换装） */
+  private partTextures: Map<string, string> = new Map();
+
+  /** fileBase → timelineName[] 反向映射（用于 applyLook） */
+  private fileToTimelines: Map<string, string[]> = new Map();
+
   constructor(config: PlayerDisplayConfig) {
-    const { scene, x, y, scmlData, texturePrefix, scale = 1 } = config;
+    const { scene, x, y, scmlData, texturePrefix, partTextures = {}, scale = 1 } = config;
     super(scene, x, y);
 
     this.texturePrefix = texturePrefix;
+    this.partTextures = new Map(Object.entries(partTextures));
 
     scene.add.existing(this);
     scene.events.on('update', this.handleSceneUpdate, this);
@@ -111,6 +121,24 @@ export class PlayerDisplay extends Phaser.GameObjects.Container {
    */
   getCurrentAnimation(): string | null {
     return this.runtime.getCurrentAnimationName();
+  }
+
+  /**
+   * 批量更换外观（换装）
+   * @param parts 部件名 → Phaser 纹理 key 的映射表
+   */
+  applyLook(parts: Record<string, string>): void {
+    for (const [partName, textureKey] of Object.entries(parts)) {
+      const normalizedName = this.normalizeFileName(partName);
+      this.partTextures.set(normalizedName, textureKey);
+
+      const timelines = this.fileToTimelines.get(normalizedName);
+      if (timelines) {
+        for (const timelineName of timelines) {
+          this.setPartTexture(timelineName, textureKey);
+        }
+      }
+    }
   }
 
   /**
@@ -184,6 +212,10 @@ export class PlayerDisplay extends Phaser.GameObjects.Container {
 
       if (fileInfo) {
         this.fileInfos.set(timelineName, fileInfo);
+        const fileBase = this.normalizeFileName(fileInfo.name);
+        const arr = this.fileToTimelines.get(fileBase) ?? [];
+        arr.push(timelineName);
+        this.fileToTimelines.set(fileBase, arr);
       }
 
       // 构建纹理 key
@@ -246,14 +278,27 @@ export class PlayerDisplay extends Phaser.GameObjects.Container {
   /**
    * 构建纹理 key
    *
-   * 将 SCML 文件名（如 'body.png'）转换为 Phaser 纹理 key（如 'barbarian_02_body'）
+   * 将 SCML 文件名（如 'body.png'）转换为 Phaser 纹理 key。
+   * 优先使用 partTextures 映射表，否则回退到 texturePrefix + 部件名。
    */
   private buildTextureKey(fileName: string): string {
-    // 去掉扩展名，空格转下划线，小写化
-    const base = fileName
+    const base = this.normalizeFileName(fileName);
+
+    if (this.partTextures.has(base)) {
+      return this.partTextures.get(base)!;
+    }
+
+    return `${this.texturePrefix}_${base}`;
+  }
+
+  /**
+   * 规范化部件文件名
+   * 去掉扩展名、空格转下划线、全小写化
+   */
+  private normalizeFileName(fileName: string): string {
+    return fileName
       .replace(/\.png$/i, '')
       .replace(/\s+/g, '_')
       .toLowerCase();
-    return `${this.texturePrefix}_${base}`;
   }
 }

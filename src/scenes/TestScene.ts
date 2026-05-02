@@ -1,6 +1,11 @@
 import * as Phaser from 'phaser';
 import { SceneKeys } from '../constants/SceneKeys';
 import { SCMLParser, PlayerDisplay } from '../objects/player';
+import { CharacterLookManager } from '../managers/CharacterLookManager';
+import { AssetLoader } from '../utils/AssetLoader';
+import { characterLookTableData } from '../data/characterLookTable';
+import { outfitPartTableData } from '../data/outfitPartTable';
+import type { CharacterLookSave } from '../types/character-look';
 
 /**
  * 测试页面场景
@@ -21,36 +26,32 @@ export class TestScene extends Phaser.Scene {
   /** 当前动画显示 */
   private animLabel!: Phaser.GameObjects.Text;
 
+  /** 外观管理器 */
+  private lookManager!: CharacterLookManager;
+
   constructor() {
     super({ key: SceneKeys.TestScene });
   }
 
   preload(): void {
-    // 加载 Barbarian 02 骨骼动画资源
-    const prefix = 'barbarian_02';
-    const partsPath = 'assets/characters/barbarian_02';
-
-    this.load.text(`${prefix}_scml`, `${partsPath}/animations.scml`);
-
-    const parts = [
-      'body',
-      'face_01',
-      'face_02',
-      'face_03',
-      'head',
-      'left_arm',
-      'left_hand',
-      'left_leg',
-      'right_arm',
-      'right_hand',
-      'right_leg',
-      'shield',
-      'weapon',
+    // 加载共享骨骼动画（按动画拆分后的独立文件）
+    const animNames = [
+      'idle',
+      'idle_blink',
+      'walking',
+      'attacking',
+      'taunt',
+      'jump_start',
+      'jump_loop',
+      'hurt',
+      'dying',
     ];
-
-    for (const part of parts) {
-      this.load.image(`${prefix}_${part}`, `${partsPath}/${part}.png`);
+    for (const name of animNames) {
+      this.load.text(`anim_${name}`, `assets/animations/humanoid/${name}.scml`);
     }
+
+    // 从配表自动加载角色图片资源
+    AssetLoader.preloadImages(this, 'character');
   }
 
   create(): void {
@@ -188,25 +189,52 @@ export class TestScene extends Phaser.Scene {
    * 初始化 PlayerDisplay 和控制面板
    */
   private setupPlayerDisplay(width: number, height: number): void {
-    // 解析 SCML
-    const scmlText = this.cache.text.get('barbarian_02_scml') as string;
-    const scmlData = SCMLParser.parse(scmlText);
+    // 解析并合并多个 SCML 动画文件
+    const animNames = [
+      'idle',
+      'idle_blink',
+      'walking',
+      'attacking',
+      'taunt',
+      'jump_start',
+      'jump_loop',
+      'hurt',
+      'dying',
+    ];
+    const scmlDatas = animNames.map((name) =>
+      SCMLParser.parse(this.cache.text.get(`anim_${name}`) as string)
+    );
+    const scmlData = SCMLParser.mergeAnimations(scmlDatas);
 
-    // 创建 PlayerDisplay
+    // 初始化外观管理器并加载两张配表（直接 import，无需运行时加载）
+    const lookManager = new CharacterLookManager();
+    lookManager.loadLooks(characterLookTableData);
+    lookManager.loadParts(outfitPartTableData);
+
+    // 构造默认存档（新角色初始状态）
+    const defaultSave: CharacterLookSave = CharacterLookManager.createEmptySave('barbarian_default');
+    const config = lookManager.getConfig(defaultSave.baseId);
+
+    // 创建 PlayerDisplay（使用配表中的默认纹理前缀）
     this.playerDisplay = new PlayerDisplay({
       scene: this,
       x: width * 0.3,
       y: height * 0.65,
       scmlData,
-      texturePrefix: 'barbarian_02',
+      texturePrefix: config?.texturePrefix ?? 'barbarian_02',
       scale: 0.3,
     });
+
+    // 应用配表默认外观
+    lookManager.applyToDisplay(defaultSave, this.playerDisplay);
 
     // 默认播放 Idle
     this.playerDisplay.play('Idle');
 
     // 创建控制面板
     this.createControlPanel(width, height);
+
+    this.lookManager = lookManager;
   }
 
   /**
@@ -337,6 +365,80 @@ export class TestScene extends Phaser.Scene {
     equipBtns.forEach((eq, idx) => {
       const bx = panelX - 80 + idx * 80;
       const btn = this.createSmallButton(bx, btnY, eq.label, eq.action);
+      btn.setScale(0.8);
+    });
+
+    btnY += 45;
+
+    // applyLook 批量换装演示
+    this.add
+      .text(panelX, btnY, '👔 批量换装 (applyLook)', {
+        fontSize: '18px',
+        color: '#e67e22',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+
+    btnY += 35;
+
+    const lookBtns = [
+      {
+        label: '全副武装',
+        action: () =>
+          this.playerDisplay.applyLook({
+            weapon: 'barbarian_02_weapon',
+            shield: 'barbarian_02_shield',
+          }),
+      },
+      {
+        label: '轻装',
+        action: () =>
+          this.playerDisplay.applyLook({
+            weapon: 'barbarian_02_weapon',
+            shield: '',
+          }),
+      },
+    ];
+
+    lookBtns.forEach((lk, idx) => {
+      const bx = panelX - 60 + idx * 120;
+      const btn = this.createSmallButton(bx, btnY, lk.label, lk.action);
+      btn.setScale(0.8);
+    });
+
+    btnY += 45;
+
+    // 配表驱动外观切换演示
+    this.add
+      .text(panelX, btnY, '📋 配表外观配置', {
+        fontSize: '18px',
+        color: '#9b59b6',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+
+    btnY += 35;
+
+    const configBtns = [
+      {
+        label: '默认全套',
+        action: () => {
+          const save = CharacterLookManager.createEmptySave('barbarian_default');
+          this.lookManager.applyToDisplay(save, this.playerDisplay);
+        },
+      },
+      {
+        label: '轻装(配表)',
+        action: () => {
+          const save = CharacterLookManager.createEmptySave('barbarian_light');
+          this.lookManager.applyToDisplay(save, this.playerDisplay);
+        },
+      },
+    ];
+
+    configBtns.forEach((cfg, idx) => {
+      const bx = panelX - 60 + idx * 120;
+      const btn = this.createSmallButton(bx, btnY, cfg.label, cfg.action);
       btn.setScale(0.8);
     });
   }
