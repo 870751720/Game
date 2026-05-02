@@ -1,5 +1,4 @@
 import * as Phaser from 'phaser';
-import { BootScene } from './scenes/BootScene';
 import { TestScene } from './scenes/TestScene';
 import { constantTableData } from './data/constantTable';
 
@@ -8,12 +7,9 @@ import { constantTableData } from './data/constantTable';
  * Phaser 默认启动 scene 数组的第一个场景
  */
 const defaultScene =
-  constantTableData.find((c) => c.constantKey === 'default_scene')?.constantValue ?? 'BootScene';
+  constantTableData.find((c) => c.constantKey === 'default_scene')?.constantValue ?? 'TestScene';
 
-const scenes =
-  defaultScene === 'TestScene'
-    ? [TestScene, BootScene]
-    : [BootScene, TestScene];
+const scenes = [TestScene, ];
 
 export const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,

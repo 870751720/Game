@@ -21,4 +21,4 @@
 
 | constant_key | constant_value | description |
 |:---|:---|:---|
-| default_scene | TestScene | 默认启动场景：BootScene(正式游戏) / TestScene(测试页面) |
+| default_scene | TestScene | 默认启动场景：TestScene(测试页面) |

@@ -18,6 +18,6 @@ export const constantTableData: ConstantTable[] = [
   {
     "constantKey": "default_scene",
     "constantValue": "TestScene",
-    "description": "默认启动场景：BootScene(正式游戏) / TestScene(测试页面)"
+    "description": "默认启动场景：TestScene(测试页面)"
   }
 ];
