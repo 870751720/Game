@@ -1,7 +1,7 @@
 // ============================================
 // 由导表脚本自动生成，请勿手动修改
 // 源文件: data/tables/outfit_part_table.md
-// 生成时间: 2026-05-02T12:55:13.598Z
+// 生成时间: 2026-05-02T13:08:00.611Z
 // ============================================
 
 /** 字段定义 */
@@ -17,108 +17,168 @@ export interface OutfitPartTable {
 /** 导表数据，可直接 import 使用 */
 export const outfitPartTableData: OutfitPartTable[] = [
   {
-    "outfitId": "barbarian_default",
+    "outfitId": "barbarian_01_default",
+    "partName": "body",
+    "textureKey": "barbarian_01_body"
+  },
+  {
+    "outfitId": "barbarian_01_default",
+    "partName": "head",
+    "textureKey": "barbarian_01_head"
+  },
+  {
+    "outfitId": "barbarian_01_default",
+    "partName": "left_arm",
+    "textureKey": "barbarian_01_left_arm"
+  },
+  {
+    "outfitId": "barbarian_01_default",
+    "partName": "left_hand",
+    "textureKey": "barbarian_01_left_hand"
+  },
+  {
+    "outfitId": "barbarian_01_default",
+    "partName": "right_arm",
+    "textureKey": "barbarian_01_right_arm"
+  },
+  {
+    "outfitId": "barbarian_01_default",
+    "partName": "right_hand",
+    "textureKey": "barbarian_01_right_hand"
+  },
+  {
+    "outfitId": "barbarian_01_default",
+    "partName": "left_leg",
+    "textureKey": "barbarian_01_left_leg"
+  },
+  {
+    "outfitId": "barbarian_01_default",
+    "partName": "right_leg",
+    "textureKey": "barbarian_01_right_leg"
+  },
+  {
+    "outfitId": "barbarian_01_default",
+    "partName": "weapon",
+    "textureKey": "barbarian_01_weapon"
+  },
+  {
+    "outfitId": "barbarian_01_default",
+    "partName": "shield",
+    "textureKey": "barbarian_01_shield"
+  },
+  {
+    "outfitId": "barbarian_01_default",
+    "partName": "face_01",
+    "textureKey": "barbarian_01_face_01"
+  },
+  {
+    "outfitId": "barbarian_02_default",
     "partName": "body",
     "textureKey": "barbarian_02_body"
   },
   {
-    "outfitId": "barbarian_default",
+    "outfitId": "barbarian_02_default",
     "partName": "head",
     "textureKey": "barbarian_02_head"
   },
   {
-    "outfitId": "barbarian_default",
+    "outfitId": "barbarian_02_default",
     "partName": "left_arm",
     "textureKey": "barbarian_02_left_arm"
   },
   {
-    "outfitId": "barbarian_default",
+    "outfitId": "barbarian_02_default",
     "partName": "left_hand",
     "textureKey": "barbarian_02_left_hand"
   },
   {
-    "outfitId": "barbarian_default",
+    "outfitId": "barbarian_02_default",
     "partName": "right_arm",
     "textureKey": "barbarian_02_right_arm"
   },
   {
-    "outfitId": "barbarian_default",
+    "outfitId": "barbarian_02_default",
     "partName": "right_hand",
     "textureKey": "barbarian_02_right_hand"
   },
   {
-    "outfitId": "barbarian_default",
+    "outfitId": "barbarian_02_default",
     "partName": "left_leg",
     "textureKey": "barbarian_02_left_leg"
   },
   {
-    "outfitId": "barbarian_default",
+    "outfitId": "barbarian_02_default",
     "partName": "right_leg",
     "textureKey": "barbarian_02_right_leg"
   },
   {
-    "outfitId": "barbarian_default",
+    "outfitId": "barbarian_02_default",
     "partName": "weapon",
     "textureKey": "barbarian_02_weapon"
   },
   {
-    "outfitId": "barbarian_default",
+    "outfitId": "barbarian_02_default",
     "partName": "shield",
     "textureKey": "barbarian_02_shield"
   },
   {
-    "outfitId": "barbarian_default",
+    "outfitId": "barbarian_02_default",
     "partName": "face_01",
     "textureKey": "barbarian_02_face_01"
   },
   {
-    "outfitId": "barbarian_light",
+    "outfitId": "barbarian_03_default",
     "partName": "body",
-    "textureKey": "barbarian_02_body"
+    "textureKey": "barbarian_03_body"
   },
   {
-    "outfitId": "barbarian_light",
+    "outfitId": "barbarian_03_default",
     "partName": "head",
-    "textureKey": "barbarian_02_head"
+    "textureKey": "barbarian_03_head"
   },
   {
-    "outfitId": "barbarian_light",
+    "outfitId": "barbarian_03_default",
     "partName": "left_arm",
-    "textureKey": "barbarian_02_left_arm"
+    "textureKey": "barbarian_03_left_arm"
   },
   {
-    "outfitId": "barbarian_light",
+    "outfitId": "barbarian_03_default",
     "partName": "left_hand",
-    "textureKey": "barbarian_02_left_hand"
+    "textureKey": "barbarian_03_left_hand"
   },
   {
-    "outfitId": "barbarian_light",
+    "outfitId": "barbarian_03_default",
     "partName": "right_arm",
-    "textureKey": "barbarian_02_right_arm"
+    "textureKey": "barbarian_03_right_arm"
   },
   {
-    "outfitId": "barbarian_light",
+    "outfitId": "barbarian_03_default",
     "partName": "right_hand",
-    "textureKey": "barbarian_02_right_hand"
+    "textureKey": "barbarian_03_right_hand"
   },
   {
-    "outfitId": "barbarian_light",
+    "outfitId": "barbarian_03_default",
     "partName": "left_leg",
-    "textureKey": "barbarian_02_left_leg"
+    "textureKey": "barbarian_03_left_leg"
   },
   {
-    "outfitId": "barbarian_light",
+    "outfitId": "barbarian_03_default",
     "partName": "right_leg",
-    "textureKey": "barbarian_02_right_leg"
+    "textureKey": "barbarian_03_right_leg"
   },
   {
-    "outfitId": "barbarian_light",
+    "outfitId": "barbarian_03_default",
     "partName": "weapon",
-    "textureKey": "barbarian_02_weapon"
+    "textureKey": "barbarian_03_weapon"
   },
   {
-    "outfitId": "barbarian_light",
+    "outfitId": "barbarian_03_default",
+    "partName": "shield",
+    "textureKey": "barbarian_03_shield"
+  },
+  {
+    "outfitId": "barbarian_03_default",
     "partName": "face_01",
-    "textureKey": "barbarian_02_face_01"
+    "textureKey": "barbarian_03_face_01"
   }
 ];

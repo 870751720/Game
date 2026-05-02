@@ -421,23 +421,30 @@ export class TestScene extends Phaser.Scene {
 
     const configBtns = [
       {
-        label: '默认全套',
+        label: '野蛮人01',
         action: () => {
-          const save = CharacterLookManager.createEmptySave('barbarian_default');
+          const save = CharacterLookManager.createEmptySave('barbarian_01_default');
           this.lookManager.applyToDisplay(save, this.playerDisplay);
         },
       },
       {
-        label: '轻装(配表)',
+        label: '野蛮人02',
         action: () => {
-          const save = CharacterLookManager.createEmptySave('barbarian_light');
+          const save = CharacterLookManager.createEmptySave('barbarian_02_default');
+          this.lookManager.applyToDisplay(save, this.playerDisplay);
+        },
+      },
+      {
+        label: '野蛮人03',
+        action: () => {
+          const save = CharacterLookManager.createEmptySave('barbarian_03_default');
           this.lookManager.applyToDisplay(save, this.playerDisplay);
         },
       },
     ];
 
     configBtns.forEach((cfg, idx) => {
-      const bx = panelX - 60 + idx * 120;
+      const bx = panelX - 80 + idx * 80;
       const btn = this.createSmallButton(bx, btnY, cfg.label, cfg.action);
       btn.setScale(0.8);
     });

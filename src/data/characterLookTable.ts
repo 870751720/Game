@@ -1,7 +1,7 @@
 // ============================================
 // 由导表脚本自动生成，请勿手动修改
 // 源文件: data/tables/character_look_table.md
-// 生成时间: 2026-05-02T12:55:13.596Z
+// 生成时间: 2026-05-02T13:08:00.609Z
 // ============================================
 
 /** 字段定义 */
@@ -19,15 +19,21 @@ export interface CharacterLookTable {
 /** 导表数据，可直接 import 使用 */
 export const characterLookTableData: CharacterLookTable[] = [
   {
-    "id": "barbarian_default",
-    "name": "野蛮人默认",
+    "id": "barbarian_01_default",
+    "name": "野蛮人01",
+    "animationSet": "humanoid",
+    "texturePrefix": "barbarian_01"
+  },
+  {
+    "id": "barbarian_02_default",
+    "name": "野蛮人02",
     "animationSet": "humanoid",
     "texturePrefix": "barbarian_02"
   },
   {
-    "id": "barbarian_light",
-    "name": "野蛮人轻装",
+    "id": "barbarian_03_default",
+    "name": "野蛮人03",
     "animationSet": "humanoid",
-    "texturePrefix": "barbarian_02"
+    "texturePrefix": "barbarian_03"
   }
 ];
