@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { SceneKeys } from '../constants/SceneKeys';
+
 import { SCMLParser, PlayerDisplay } from '../objects/player';
 import { CharacterLookManager } from '../managers/CharacterLookManager';
 import { AssetLoader } from '../utils/AssetLoader';
@@ -23,7 +23,7 @@ export class TestScene extends Phaser.Scene {
   private lookManager!: CharacterLookManager;
 
   constructor() {
-    super({ key: SceneKeys.TestScene });
+    super({ key: 'TestScene' });
   }
 
   preload(): void {

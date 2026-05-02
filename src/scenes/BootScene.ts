@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { SceneKeys } from '../constants/SceneKeys';
+
 
 export class BootScene extends Phaser.Scene {
   private titleText!: Phaser.GameObjects.Text;
@@ -7,7 +7,7 @@ export class BootScene extends Phaser.Scene {
   private box!: Phaser.GameObjects.Rectangle;
 
   constructor() {
-    super({ key: SceneKeys.BootScene });
+    super({ key: 'BootScene' });
   }
 
   preload(): void {
