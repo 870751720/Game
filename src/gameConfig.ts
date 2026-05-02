@@ -1,14 +1,17 @@
 import * as Phaser from 'phaser';
 import { BootScene } from './scenes/BootScene';
 import { TestScene } from './scenes/TestScene';
-import { AppConfig } from './constants/AppConfig';
+import { constantTableData } from './data/constantTable';
 
 /**
  * 根据配置决定场景注册顺序
  * Phaser 默认启动 scene 数组的第一个场景
  */
+const defaultScene =
+  constantTableData.find((c) => c.constantKey === 'default_scene')?.constantValue ?? 'BootScene';
+
 const scenes =
-  AppConfig.defaultScene === 'TestScene'
+  defaultScene === 'TestScene'
     ? [TestScene, BootScene]
     : [BootScene, TestScene];
 
