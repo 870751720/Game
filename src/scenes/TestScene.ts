@@ -1,10 +1,13 @@
 import * as Phaser from 'phaser';
 import { SceneKeys } from '../constants/SceneKeys';
 import { AssetKeys } from '../constants/AssetKeys';
+import { SCMLParser, PlayerDisplay } from '../objects/player';
 
 /**
  * 测试页面场景
  * 用于快速验证引擎功能、调试 UI 或展示开发工具
+ *
+ * 当前集成：PlayerDisplay + Spriter 骨骼动画演示
  */
 export class TestScene extends Phaser.Scene {
   private titleText!: Phaser.GameObjects.Text;
@@ -13,18 +16,50 @@ export class TestScene extends Phaser.Scene {
   private cardBg!: Phaser.GameObjects.Rectangle;
   private goButton!: Phaser.GameObjects.Container;
 
+  /** 玩家显示对象 */
+  private playerDisplay!: PlayerDisplay;
+
+  /** 当前动画显示 */
+  private animLabel!: Phaser.GameObjects.Text;
+
   constructor() {
     super({ key: SceneKeys.TestScene });
   }
 
   preload(): void {
-    // 加载 Barbarian 01 Idle 序列（12 帧）
+    // 加载 Barbarian 01 Idle 序列（12 帧）—— 保留作为参考对比
     const baseKey = AssetKeys.Character.BarbarianIdle;
     for (let i = 1; i <= 12; i++) {
       const num = i.toString().padStart(3, '0');
       const frameKey = `${baseKey}_${num}`;
       const path = `assets/characters/barbarian/idle/barbarian_idle_${num}.png`;
       this.load.image(frameKey, path);
+    }
+
+    // 加载 Barbarian 02 骨骼动画资源
+    const prefix = 'barbarian_02';
+    const partsPath = 'assets/characters/barbarian_02';
+
+    this.load.text(`${prefix}_scml`, `${partsPath}/animations.scml`);
+
+    const parts = [
+      'body',
+      'face_01',
+      'face_02',
+      'face_03',
+      'head',
+      'left_arm',
+      'left_hand',
+      'left_leg',
+      'right_arm',
+      'right_hand',
+      'right_leg',
+      'shield',
+      'weapon',
+    ];
+
+    for (const part of parts) {
+      this.load.image(`${prefix}_${part}`, `${partsPath}/${part}.png`);
     }
   }
 
@@ -100,7 +135,7 @@ export class TestScene extends Phaser.Scene {
 
     // 5. 提示文字
     this.hintText = this.add
-      .text(width / 2, height / 2 + 90, '点击任意位置生成粒子 • 按钮进入正式游戏', {
+      .text(width / 2, height / 2 + 90, '点击右侧按钮切换动画/表情 • 按钮进入正式游戏', {
         fontSize: '14px',
         color: '#95a5a6',
       })
@@ -144,40 +179,176 @@ export class TestScene extends Phaser.Scene {
 
     // 8. 点击粒子特效
     this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-      // 避免点击按钮时也触发
       if (pointer.button === 0) {
         this.createBurst(pointer.x, pointer.y);
       }
     });
 
-    // 8. 注册 Barbarian Idle 动画（仅首次）
-    const animKey = `${AssetKeys.Character.BarbarianIdle}_anim`;
-    if (!this.anims.exists(animKey)) {
-      const idleFrames = [];
-      for (let i = 1; i <= 12; i++) {
-        const num = i.toString().padStart(3, '0');
-        idleFrames.push({ key: `${AssetKeys.Character.BarbarianIdle}_${num}` });
-      }
-      this.anims.create({
-        key: animKey,
-        frames: idleFrames,
-        frameRate: 10,
-        repeat: -1,
-      });
-    }
-
-    // 9. 播放角色动画（放在画面底部）
-    const firstFrameKey = `${AssetKeys.Character.BarbarianIdle}_001`;
-    const sprite = this.add.sprite(width / 2, height - 80, firstFrameKey);
-    sprite.setName('barbarian_sprite');
-    sprite.setScale(0.4);
-    sprite.play(animKey);
+    // ========== 9. PlayerDisplay 骨骼动画演示 ==========
+    this.setupPlayerDisplay(width, height);
 
     // 10. 进入动画
     this.cameras.main.fadeIn(400, 0, 0, 0);
 
     // 监听窗口大小变化
     this.scale.on('resize', this.handleResize, this);
+  }
+
+  /**
+   * 初始化 PlayerDisplay 和控制面板
+   */
+  private setupPlayerDisplay(width: number, height: number): void {
+    // 解析 SCML
+    const scmlText = this.cache.text.get('barbarian_02_scml') as string;
+    const scmlData = SCMLParser.parse(scmlText);
+
+    // 创建 PlayerDisplay
+    this.playerDisplay = new PlayerDisplay({
+      scene: this,
+      x: width * 0.3,
+      y: height * 0.65,
+      scmlData,
+      texturePrefix: 'barbarian_02',
+      scale: 0.3,
+    });
+
+    // 默认播放 Idle
+    this.playerDisplay.play('Idle');
+
+    // 创建控制面板
+    this.createControlPanel(width, height);
+  }
+
+  /**
+   * 创建右侧控制面板（动画切换 + 表情切换）
+   */
+  private createControlPanel(width: number, height: number): void {
+    const panelX = width * 0.72;
+    const panelY = height * 0.18;
+
+    // 面板背景
+    const panelBg = this.add.rectangle(
+      panelX,
+      panelY + 180,
+      300,
+      440,
+      0x1a1a2e,
+      0.9
+    );
+    panelBg.setStrokeStyle(2, 0xe74c3c);
+
+    // 面板标题
+    this.add
+      .text(panelX, panelY - 10, '⚔️ 骨骼动画演示', {
+        fontSize: '22px',
+        color: '#e74c3c',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+
+    // 当前动画标签
+    this.animLabel = this.add
+      .text(panelX, panelY + 20, '动画: Idle', {
+        fontSize: '16px',
+        color: '#f39c12',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+
+    // 冻结首帧按钮
+    this.createSmallButton(
+      panelX,
+      panelY + 48,
+      '⏸ 冻结首帧',
+      () => {
+        this.playerDisplay.stop();
+        this.playerDisplay.setTime(0);
+      },
+      0xe67e22
+    );
+
+    // 动画切换按钮
+    const animations = [
+      'Idle',
+      'Idle Blink',
+      'Walking',
+      'Attacking',
+      'Taunt',
+      'Jump Start',
+      'Jump Loop',
+      'Hurt',
+      'Dying',
+    ];
+
+    let btnY = panelY + 82;
+    const btnCols = 2;
+    const btnSpacingX = 130;
+    const btnSpacingY = 38;
+
+    animations.forEach((animName, idx) => {
+      const col = idx % btnCols;
+      const row = Math.floor(idx / btnCols);
+      const bx = panelX - btnSpacingX / 2 + col * btnSpacingX;
+      const by = btnY + row * btnSpacingY;
+
+      const btn = this.createSmallButton(bx, by, animName, () => {
+        this.playerDisplay.play(animName);
+        this.animLabel.setText(`动画: ${animName}`);
+      });
+      btn.setScale(0.85);
+    });
+
+    btnY += Math.ceil(animations.length / btnCols) * btnSpacingY + 20;
+
+    // 表情切换区域
+    this.add
+      .text(panelX, btnY, '😊 表情切换', {
+        fontSize: '18px',
+        color: '#3498db',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+
+    btnY += 35;
+
+    const faces = [
+      { label: '表情 1', texture: 'barbarian_02_face_01' },
+      { label: '表情 2', texture: 'barbarian_02_face_02' },
+      { label: '表情 3', texture: 'barbarian_02_face_03' },
+    ];
+
+    faces.forEach((face, idx) => {
+      const bx = panelX - 80 + idx * 80;
+      const btn = this.createSmallButton(bx, btnY, face.label, () => {
+        this.playerDisplay.setPartTexture('Face 01', face.texture);
+      });
+      btn.setScale(0.8);
+    });
+
+    btnY += 50;
+
+    // 武器/盾牌切换
+    this.add
+      .text(panelX, btnY, '🛡️ 装备切换', {
+        fontSize: '18px',
+        color: '#2ecc71',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+
+    btnY += 35;
+
+    const equipBtns = [
+      { label: '持剑', action: () => this.playerDisplay.setPartTexture('Weapon', 'barbarian_02_weapon') },
+      { label: '持盾', action: () => this.playerDisplay.setPartTexture('Shield', 'barbarian_02_shield') },
+      { label: '无盾', action: () => this.playerDisplay.setPartTexture('Shield', '') },
+    ];
+
+    equipBtns.forEach((eq, idx) => {
+      const bx = panelX - 80 + idx * 80;
+      const btn = this.createSmallButton(bx, btnY, eq.label, eq.action);
+      btn.setScale(0.8);
+    });
   }
 
   /**
@@ -219,7 +390,6 @@ export class TestScene extends Phaser.Scene {
 
     emitter.explode(12);
 
-    // 等所有粒子生命周期结束后再销毁发射器（800ms > 600ms lifespan）
     this.time.delayedCall(800, () => {
       emitter.destroy();
     });
@@ -234,13 +404,25 @@ export class TestScene extends Phaser.Scene {
     label: string,
     onClick: () => void
   ): Phaser.GameObjects.Container {
-    const paddingX = 28;
-    const paddingY = 14;
+    return this.createSmallButton(x, y, label, onClick, 0x3498db);
+  }
+
+  /**
+   * 创建小型按钮（用于控制面板）
+   */
+  private createSmallButton(
+    x: number,
+    y: number,
+    label: string,
+    onClick: () => void,
+    color: number = 0x3498db
+  ): Phaser.GameObjects.Container {
+    const paddingX = 12;
+    const paddingY = 8;
 
     const text = this.add.text(0, 0, label, {
-      fontSize: '18px',
+      fontSize: '13px',
       color: '#ffffff',
-      fontStyle: 'bold',
     });
 
     const bg = this.add.rectangle(
@@ -248,28 +430,22 @@ export class TestScene extends Phaser.Scene {
       0,
       text.width + paddingX * 2,
       text.height + paddingY * 2,
-      0x3498db
+      color
     );
     bg.setInteractive({ useHandCursor: true });
 
-    const shadow = this.add.rectangle(
-      4,
-      4,
-      text.width + paddingX * 2,
-      text.height + paddingY * 2,
-      0x1a5276,
-      0.6
-    );
+    const container = this.add.container(x, y, [bg, text]);
 
-    const container = this.add.container(x, y, [shadow, bg, text]);
-
-    // 悬停效果
     bg.on('pointerover', () => {
-      bg.setFillStyle(0x2980b9);
+      bg.setFillStyle(Phaser.Display.Color.GetColor(
+        Math.min(255, ((color >> 16) & 0xff) + 30),
+        Math.min(255, ((color >> 8) & 0xff) + 30),
+        Math.min(255, (color & 0xff) + 30)
+      ));
       container.setScale(1.05);
     });
     bg.on('pointerout', () => {
-      bg.setFillStyle(0x3498db);
+      bg.setFillStyle(color);
       container.setScale(1);
     });
     bg.on('pointerdown', () => {
@@ -296,10 +472,9 @@ export class TestScene extends Phaser.Scene {
     this.goButton.setPosition(w / 2, h / 2 + 140);
     this.cardBg.setPosition(w / 2, h / 2);
 
-    // 重新定位角色 sprite（通过场景查找）
-    const sprite = this.children.getByName('barbarian_sprite') as Phaser.GameObjects.Sprite;
-    if (sprite) {
-      sprite.setPosition(w / 2, h - 80);
+    // 重新定位 PlayerDisplay
+    if (this.playerDisplay) {
+      this.playerDisplay.setPosition(w * 0.3, h * 0.65);
     }
   }
 }
