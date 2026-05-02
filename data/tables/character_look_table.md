@@ -22,6 +22,6 @@
 
 | id | name | animation_set | texture_prefix |
 |:---|:---|:---|:---|
-| barbarian_01_default | 野蛮人01 | humanoid | barbarian_01 |
-| barbarian_02_default | 野蛮人02 | humanoid | barbarian_02 |
-| barbarian_03_default | 野蛮人03 | humanoid | barbarian_03 |
+| barbarian_01_default | 野蛮人01 | humanoid | common |
+| barbarian_02_default | 野蛮人02 | humanoid | common |
+| barbarian_03_default | 野蛮人03 | humanoid | common |

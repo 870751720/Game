@@ -8,22 +8,15 @@ import { outfitPartTableData } from '../data/outfitPartTable';
 import type { CharacterLookSave } from '../types/character-look';
 
 /**
- * 测试页面场景
- * 用于快速验证引擎功能、调试 UI 或展示开发工具
+ * 角色外观切换测试场景
  *
- * 当前集成：PlayerDisplay + Spriter 骨骼动画演示
+ * 用于验证 PlayerDisplay 各部位独立切换功能
  */
 export class TestScene extends Phaser.Scene {
-  private titleText!: Phaser.GameObjects.Text;
-  private infoText!: Phaser.GameObjects.Text;
-  private hintText!: Phaser.GameObjects.Text;
-  private cardBg!: Phaser.GameObjects.Rectangle;
-  private goButton!: Phaser.GameObjects.Container;
-
   /** 玩家显示对象 */
   private playerDisplay!: PlayerDisplay;
 
-  /** 当前动画显示 */
+  /** 当前动画显示标签 */
   private animLabel!: Phaser.GameObjects.Text;
 
   /** 外观管理器 */
@@ -57,128 +50,14 @@ export class TestScene extends Phaser.Scene {
   create(): void {
     const { width, height } = this.scale;
 
-    // 1. 动态背景网格
-    this.createGridBackground(width, height);
+    // 深色纯色背景
+    this.cameras.main.setBackgroundColor('#111827');
 
-    // 2. 信息卡片背景（带半透明）
-    this.cardBg = this.add.rectangle(
-      width / 2,
-      height / 2,
-      480,
-      320,
-      0x1a1a2e,
-      0.85
-    );
-    this.cardBg.setStrokeStyle(2, 0x3498db);
-
-    // 3. 标题（带呼吸动画）
-    this.titleText = this.add
-      .text(width / 2, height / 2 - 110, '🧪 测试页面', {
-        fontSize: '42px',
-        color: '#f39c12',
-        fontStyle: 'bold',
-        shadow: {
-          offsetX: 2,
-          offsetY: 2,
-          color: '#000000',
-          blur: 4,
-          fill: true,
-        },
-      })
-      .setOrigin(0.5);
-
-    this.tweens.add({
-      targets: this.titleText,
-      scale: 1.05,
-      duration: 1200,
-      yoyo: true,
-      repeat: -1,
-      ease: 'Sine.easeInOut',
-    });
-
-    // 4. 信息面板（逐行浮现）
-    const infoLines = [
-      `Phaser 版本 : ${Phaser.VERSION}`,
-      `渲染模式   : ${this.renderer.type === Phaser.WEBGL ? 'WebGL' : 'Canvas'}`,
-      `画布尺寸   : ${Math.round(width)} × ${Math.round(height)}`,
-      `当前场景   : ${SceneKeys.TestScene}`,
-    ];
-
-    this.infoText = this.add
-      .text(width / 2, height / 2 - 10, infoLines.join('\n'), {
-        fontSize: '18px',
-        color: '#ecf0f1',
-        align: 'center',
-        lineSpacing: 14,
-        fontFamily: 'Consolas, "Courier New", monospace',
-      })
-      .setOrigin(0.5)
-      .setAlpha(0);
-
-    this.tweens.add({
-      targets: this.infoText,
-      alpha: 1,
-      y: height / 2 - 20,
-      duration: 600,
-      delay: 200,
-      ease: 'Power2',
-    });
-
-    // 5. 提示文字
-    this.hintText = this.add
-      .text(width / 2, height / 2 + 90, '点击右侧按钮切换动画/表情 • 按钮进入正式游戏', {
-        fontSize: '14px',
-        color: '#95a5a6',
-      })
-      .setOrigin(0.5)
-      .setAlpha(0);
-
-    this.tweens.add({
-      targets: this.hintText,
-      alpha: 1,
-      duration: 500,
-      delay: 600,
-    });
-
-    // 6. 跳转按钮（带悬停动画）
-    this.goButton = this.createButton(
-      width / 2,
-      height / 2 + 140,
-      '▶ 进入 BootScene',
-      () => {
-        this.cameras.main.fadeOut(300, 0, 0, 0);
-        this.cameras.main.once('camerafadeoutcomplete', () => {
-          this.scene.start(SceneKeys.BootScene);
-        });
-      }
-    );
-
-    this.goButton.setAlpha(0);
-    this.tweens.add({
-      targets: this.goButton,
-      alpha: 1,
-      duration: 500,
-      delay: 800,
-    });
-
-    // 7. 预生成粒子纹理（白色，通过 tint 上色）
-    const particleGraphics = this.make.graphics({ x: 0, y: 0 });
-    particleGraphics.fillStyle(0xffffff, 1);
-    particleGraphics.fillCircle(4, 4, 4);
-    particleGraphics.generateTexture('particle', 8, 8);
-    particleGraphics.destroy();
-
-    // 8. 点击粒子特效
-    this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-      if (pointer.button === 0) {
-        this.createBurst(pointer.x, pointer.y);
-      }
-    });
-
-    // ========== 9. PlayerDisplay 骨骼动画演示 ==========
+    // 初始化 PlayerDisplay 和控制面板
     this.setupPlayerDisplay(width, height);
+    this.createControlPanel(width, height);
 
-    // 10. 进入动画
+    // 进入淡入动画
     this.cameras.main.fadeIn(400, 0, 0, 0);
 
     // 监听窗口大小变化
@@ -186,7 +65,7 @@ export class TestScene extends Phaser.Scene {
   }
 
   /**
-   * 初始化 PlayerDisplay 和控制面板
+   * 初始化 PlayerDisplay
    */
   private setupPlayerDisplay(width: number, height: number): void {
     // 解析并合并多个 SCML 动画文件
@@ -206,23 +85,23 @@ export class TestScene extends Phaser.Scene {
     );
     const scmlData = SCMLParser.mergeAnimations(scmlDatas);
 
-    // 初始化外观管理器并加载两张配表（直接 import，无需运行时加载）
+    // 初始化外观管理器并加载两张配表
     const lookManager = new CharacterLookManager();
     lookManager.loadLooks(characterLookTableData);
     lookManager.loadParts(outfitPartTableData);
 
-    // 构造默认存档（新角色初始状态）
+    // 构造默认存档
     const defaultSave: CharacterLookSave = CharacterLookManager.createEmptySave('barbarian_02_default');
     const config = lookManager.getConfig(defaultSave.baseId);
 
-    // 创建 PlayerDisplay（使用配表中的默认纹理前缀）
+    // 创建 PlayerDisplay
     this.playerDisplay = new PlayerDisplay({
       scene: this,
       x: width * 0.3,
-      y: height * 0.65,
+      y: height * 0.6,
       scmlData,
-      texturePrefix: config?.texturePrefix ?? 'barbarian_02',
-      scale: 0.3,
+      texturePrefix: config?.texturePrefix ?? 'common',
+      scale: 0.35,
     });
 
     // 应用配表默认外观
@@ -231,61 +110,59 @@ export class TestScene extends Phaser.Scene {
     // 默认播放 Idle
     this.playerDisplay.play('Idle');
 
-    // 创建控制面板
-    this.createControlPanel(width, height);
-
     this.lookManager = lookManager;
   }
 
   /**
-   * 创建右侧控制面板（动画切换 + 表情切换）
+   * 创建右侧控制面板
    */
   private createControlPanel(width: number, height: number): void {
-    const panelX = width * 0.72;
-    const panelY = height * 0.18;
+    const panelX = width * 0.76;
+    const startY = height * 0.06;
 
     // 面板背景
     const panelBg = this.add.rectangle(
       panelX,
-      panelY + 180,
-      300,
-      440,
-      0x1a1a2e,
-      0.9
+      startY + 320,
+      340,
+      640,
+      0x1f2937,
+      0.95
     );
-    panelBg.setStrokeStyle(2, 0xe74c3c);
+    panelBg.setStrokeStyle(2, 0x374151);
 
-    // 面板标题
-    this.add
-      .text(panelX, panelY - 10, '⚔️ 骨骼动画演示', {
-        fontSize: '22px',
-        color: '#e74c3c',
-        fontStyle: 'bold',
-      })
-      .setOrigin(0.5);
+    let btnY = startY;
 
     // 当前动画标签
     this.animLabel = this.add
-      .text(panelX, panelY + 20, '动画: Idle', {
+      .text(panelX, btnY, '动画: Idle', {
         fontSize: '16px',
         color: '#f39c12',
         fontStyle: 'bold',
       })
       .setOrigin(0.5);
 
-    // 冻结首帧按钮
-    this.createSmallButton(
-      panelX,
-      panelY + 48,
-      '⏸ 冻结首帧',
-      () => {
-        this.playerDisplay.stop();
-        this.playerDisplay.setTime(0);
-      },
-      0xe67e22
-    );
+    btnY += 28;
 
-    // 动画切换按钮
+    // 冻结首帧按钮
+    this.createSmallButton(panelX, btnY, '⏸ 冻结首帧', () => {
+      this.playerDisplay.stop();
+      this.playerDisplay.setTime(0);
+    });
+
+    btnY += 40;
+
+    // 动画切换
+    this.add
+      .text(panelX, btnY, '🎬 动画切换', {
+        fontSize: '14px',
+        color: '#9ca3af',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+
+    btnY += 22;
+
     const animations = [
       'Idle',
       'Idle Blink',
@@ -298,126 +175,35 @@ export class TestScene extends Phaser.Scene {
       'Dying',
     ];
 
-    let btnY = panelY + 82;
-    const btnCols = 2;
-    const btnSpacingX = 130;
-    const btnSpacingY = 38;
+    const animCols = 2;
+    const animSpacingX = 150;
+    const animSpacingY = 32;
 
     animations.forEach((animName, idx) => {
-      const col = idx % btnCols;
-      const row = Math.floor(idx / btnCols);
-      const bx = panelX - btnSpacingX / 2 + col * btnSpacingX;
-      const by = btnY + row * btnSpacingY;
+      const col = idx % animCols;
+      const row = Math.floor(idx / animCols);
+      const bx = panelX - animSpacingX / 2 + col * animSpacingX;
+      const by = btnY + row * animSpacingY;
 
       const btn = this.createSmallButton(bx, by, animName, () => {
         this.playerDisplay.play(animName);
         this.animLabel.setText(`动画: ${animName}`);
       });
-      btn.setScale(0.85);
+      btn.setScale(0.75);
     });
 
-    btnY += Math.ceil(animations.length / btnCols) * btnSpacingY + 20;
+    btnY += Math.ceil(animations.length / animCols) * animSpacingY + 16;
 
-    // 表情切换区域
+    // 配表外观配置
     this.add
-      .text(panelX, btnY, '😊 表情切换', {
-        fontSize: '18px',
-        color: '#3498db',
+      .text(panelX, btnY, '📋 外观配置', {
+        fontSize: '14px',
+        color: '#9ca3af',
         fontStyle: 'bold',
       })
       .setOrigin(0.5);
 
-    btnY += 35;
-
-    const faces = [
-      { label: '表情 1', texture: 'common_face_01' },
-      { label: '表情 2', texture: 'common_face_02' },
-      { label: '表情 3', texture: 'common_face_03' },
-    ];
-
-    faces.forEach((face, idx) => {
-      const bx = panelX - 80 + idx * 80;
-      const btn = this.createSmallButton(bx, btnY, face.label, () => {
-        this.playerDisplay.setPartTexture('Face 01', face.texture);
-      });
-      btn.setScale(0.8);
-    });
-
-    btnY += 50;
-
-    // 武器/盾牌切换
-    this.add
-      .text(panelX, btnY, '🛡️ 装备切换', {
-        fontSize: '18px',
-        color: '#2ecc71',
-        fontStyle: 'bold',
-      })
-      .setOrigin(0.5);
-
-    btnY += 35;
-
-    const equipBtns = [
-      { label: '持剑', action: () => this.playerDisplay.setPartTexture('Weapon', 'barbarian_02_weapon') },
-      { label: '持盾', action: () => this.playerDisplay.setPartTexture('Shield', 'barbarian_02_shield') },
-      { label: '无盾', action: () => this.playerDisplay.setPartTexture('Shield', '') },
-    ];
-
-    equipBtns.forEach((eq, idx) => {
-      const bx = panelX - 80 + idx * 80;
-      const btn = this.createSmallButton(bx, btnY, eq.label, eq.action);
-      btn.setScale(0.8);
-    });
-
-    btnY += 45;
-
-    // applyLook 批量换装演示
-    this.add
-      .text(panelX, btnY, '👔 批量换装 (applyLook)', {
-        fontSize: '18px',
-        color: '#e67e22',
-        fontStyle: 'bold',
-      })
-      .setOrigin(0.5);
-
-    btnY += 35;
-
-    const lookBtns = [
-      {
-        label: '全副武装',
-        action: () =>
-          this.playerDisplay.applyLook({
-            weapon: 'barbarian_02_weapon',
-            shield: 'barbarian_02_shield',
-          }),
-      },
-      {
-        label: '轻装',
-        action: () =>
-          this.playerDisplay.applyLook({
-            weapon: 'barbarian_02_weapon',
-            shield: '',
-          }),
-      },
-    ];
-
-    lookBtns.forEach((lk, idx) => {
-      const bx = panelX - 60 + idx * 120;
-      const btn = this.createSmallButton(bx, btnY, lk.label, lk.action);
-      btn.setScale(0.8);
-    });
-
-    btnY += 45;
-
-    // 配表驱动外观切换演示
-    this.add
-      .text(panelX, btnY, '📋 配表外观配置', {
-        fontSize: '18px',
-        color: '#9b59b6',
-        fontStyle: 'bold',
-      })
-      .setOrigin(0.5);
-
-    btnY += 35;
+    btnY += 22;
 
     const configBtns = [
       {
@@ -446,81 +232,141 @@ export class TestScene extends Phaser.Scene {
     configBtns.forEach((cfg, idx) => {
       const bx = panelX - 80 + idx * 80;
       const btn = this.createSmallButton(bx, btnY, cfg.label, cfg.action);
-      btn.setScale(0.8);
+      btn.setScale(0.75);
+    });
+
+    btnY += 40;
+
+    // 表情切换
+    this.add
+      .text(panelX, btnY, '😊 表情切换', {
+        fontSize: '14px',
+        color: '#9ca3af',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+
+    btnY += 22;
+
+    const faces = [
+      { label: '表情 1', texture: 'common_face_01' },
+      { label: '表情 2', texture: 'common_face_02' },
+      { label: '表情 3', texture: 'common_face_03' },
+    ];
+
+    faces.forEach((face, idx) => {
+      const bx = panelX - 80 + idx * 80;
+      const btn = this.createSmallButton(bx, btnY, face.label, () => {
+        this.playerDisplay.setPartTexture('Face 01', face.texture);
+      });
+      btn.setScale(0.75);
+    });
+
+    btnY += 40;
+
+    // 各部位切换
+    this.add
+      .text(panelX, btnY, '👤 部位切换', {
+        fontSize: '14px',
+        color: '#9ca3af',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+
+    btnY += 22;
+
+    const partConfigs = [
+      {
+        label: '身体',
+        timeline: 'Body',
+        textures: ['common_body_01', 'common_body_02', 'common_body_03'],
+      },
+      {
+        label: '头部',
+        timeline: 'Head',
+        textures: ['common_head_01', 'common_head_02', 'common_head_03'],
+      },
+      {
+        label: '左臂',
+        timeline: 'Left Arm',
+        textures: ['common_left_arm_01', 'common_left_arm_02', 'common_left_arm_03'],
+      },
+      {
+        label: '右臂',
+        timeline: 'Right Arm',
+        textures: ['common_right_arm_01', 'common_right_arm_02', 'common_right_arm_03'],
+      },
+      {
+        label: '左手',
+        timeline: 'Left Hand',
+        textures: ['common_left_hand_01', 'common_left_hand_02', 'common_left_hand_03'],
+      },
+      {
+        label: '右手',
+        timeline: 'Right Hand',
+        textures: ['common_right_hand_01', 'common_right_hand_02', 'common_right_hand_03'],
+      },
+      {
+        label: '左腿',
+        timeline: 'Left Leg',
+        textures: ['common_left_leg_01', 'common_left_leg_02', 'common_left_leg_03'],
+      },
+      {
+        label: '右腿',
+        timeline: 'Right Leg',
+        textures: ['common_right_leg_01', 'common_right_leg_02', 'common_right_leg_03'],
+      },
+      {
+        label: '武器',
+        timeline: 'Weapon',
+        textures: ['common_weapon_01', 'common_weapon_02', 'common_weapon_03'],
+      },
+      {
+        label: '盾牌',
+        timeline: 'Shield',
+        textures: ['common_shield_01', 'common_shield_02', 'common_shield_03'],
+      },
+    ];
+
+    const partSpacingX = 70;
+
+    partConfigs.forEach((part) => {
+      // 部位标签（左对齐，在面板左侧）
+      this.add
+        .text(panelX - 140, btnY, part.label, {
+          fontSize: '12px',
+          color: '#d1d5db',
+        })
+        .setOrigin(0, 0.5);
+
+      // 三个变体按钮
+      part.textures.forEach((texture, idx) => {
+        const bx = panelX - 60 + idx * partSpacingX;
+        const btn = this.createSmallButton(bx, btnY, String(idx + 1), () => {
+          this.playerDisplay.setPartTexture(part.timeline, texture);
+        });
+        btn.setScale(0.65);
+      });
+
+      btnY += 30;
     });
   }
 
   /**
-   * 创建动态网格背景
-   */
-  private createGridBackground(width: number, height: number): void {
-    const gridSize = 40;
-    const graphics = this.add.graphics();
-    graphics.lineStyle(1, 0x34495e, 0.3);
-
-    for (let x = 0; x <= width; x += gridSize) {
-      graphics.moveTo(x, 0);
-      graphics.lineTo(x, height);
-    }
-    for (let y = 0; y <= height; y += gridSize) {
-      graphics.moveTo(0, y);
-      graphics.lineTo(width, y);
-    }
-    graphics.strokePath();
-  }
-
-  /**
-   * 在指定位置生成爆发粒子
-   */
-  private createBurst(x: number, y: number): void {
-    const colors = [0xf39c12, 0x3498db, 0xe74c3c, 0x2ecc71, 0x9b59b6];
-    const tint = Phaser.Utils.Array.GetRandom(colors);
-
-    const emitter = this.add.particles(x, y, 'particle', {
-      speed: { min: 80, max: 200 },
-      angle: { min: 0, max: 360 },
-      scale: { start: 1, end: 0 },
-      lifespan: 600,
-      gravityY: 200,
-      quantity: 12,
-      tint,
-      emitting: false,
-    });
-
-    emitter.explode(12);
-
-    this.time.delayedCall(800, () => {
-      emitter.destroy();
-    });
-  }
-
-  /**
-   * 创建一个带悬停/点击动画的按钮
-   */
-  private createButton(
-    x: number,
-    y: number,
-    label: string,
-    onClick: () => void
-  ): Phaser.GameObjects.Container {
-    return this.createSmallButton(x, y, label, onClick, 0x3498db);
-  }
-
-  /**
-   * 创建小型按钮（用于控制面板）
+   * 创建小型按钮
    */
   private createSmallButton(
     x: number,
     y: number,
     label: string,
     onClick: () => void,
-    color: number = 0x3498db
+    color: number = 0x3b82f6
   ): Phaser.GameObjects.Container {
-    const paddingX = 12;
-    const paddingY = 8;
+    const paddingX = 10;
+    const paddingY = 6;
 
     const text = this.add.text(0, 0, label, {
-      fontSize: '13px',
+      fontSize: '12px',
       color: '#ffffff',
     });
 
@@ -565,15 +411,13 @@ export class TestScene extends Phaser.Scene {
     const w = gameSize.width;
     const h = gameSize.height;
 
-    this.titleText.setPosition(w / 2, h / 2 - 110);
-    this.infoText.setPosition(w / 2, h / 2 - 20);
-    this.hintText.setPosition(w / 2, h / 2 + 90);
-    this.goButton.setPosition(w / 2, h / 2 + 140);
-    this.cardBg.setPosition(w / 2, h / 2);
-
     // 重新定位 PlayerDisplay
     if (this.playerDisplay) {
-      this.playerDisplay.setPosition(w * 0.3, h * 0.65);
+      this.playerDisplay.setPosition(w * 0.3, h * 0.6);
     }
+
+    // 重新创建控制面板（简单起见，移除旧面板并重建）
+    // 实际项目中可优化为仅更新位置
+    this.scene.restart();
   }
 }

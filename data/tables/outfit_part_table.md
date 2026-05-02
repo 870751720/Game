@@ -15,42 +15,42 @@
 |:---|:---|:---:|:---|:---|
 | outfit_id | string | ✅ | — | 外观套装ID，引用 `character_look_table.id` |
 | part_name | string | ✅ | — | 部件名，与 SCML 中的 file.name 规范化后一致，如 `body`、`face_01` |
-| texture_key | string | ✅ | — | Phaser 纹理 key，如 `barbarian_02_body` |
+| texture_key | string | ✅ | — | Phaser 纹理 key，如 `common_body_02` |
 
 ## 数据
 
 | outfit_id | part_name | texture_key |
 |:---|:---|:---|
-| barbarian_01_default | body | barbarian_01_body |
-| barbarian_01_default | head | barbarian_01_head |
-| barbarian_01_default | left_arm | barbarian_01_left_arm |
-| barbarian_01_default | left_hand | barbarian_01_left_hand |
-| barbarian_01_default | right_arm | barbarian_01_right_arm |
-| barbarian_01_default | right_hand | barbarian_01_right_hand |
-| barbarian_01_default | left_leg | barbarian_01_left_leg |
-| barbarian_01_default | right_leg | barbarian_01_right_leg |
-| barbarian_01_default | weapon | barbarian_01_weapon |
-| barbarian_01_default | shield | barbarian_01_shield |
+| barbarian_01_default | body | common_body_01 |
+| barbarian_01_default | head | common_head_01 |
+| barbarian_01_default | left_arm | common_left_arm_01 |
+| barbarian_01_default | left_hand | common_left_hand_01 |
+| barbarian_01_default | right_arm | common_right_arm_01 |
+| barbarian_01_default | right_hand | common_right_hand_01 |
+| barbarian_01_default | left_leg | common_left_leg_01 |
+| barbarian_01_default | right_leg | common_right_leg_01 |
+| barbarian_01_default | weapon | common_weapon_01 |
+| barbarian_01_default | shield | common_shield_01 |
 | barbarian_01_default | face | common_face_01 |
-| barbarian_02_default | body | barbarian_02_body |
-| barbarian_02_default | head | barbarian_02_head |
-| barbarian_02_default | left_arm | barbarian_02_left_arm |
-| barbarian_02_default | left_hand | barbarian_02_left_hand |
-| barbarian_02_default | right_arm | barbarian_02_right_arm |
-| barbarian_02_default | right_hand | barbarian_02_right_hand |
-| barbarian_02_default | left_leg | barbarian_02_left_leg |
-| barbarian_02_default | right_leg | barbarian_02_right_leg |
-| barbarian_02_default | weapon | barbarian_02_weapon |
-| barbarian_02_default | shield | barbarian_02_shield |
+| barbarian_02_default | body | common_body_02 |
+| barbarian_02_default | head | common_head_02 |
+| barbarian_02_default | left_arm | common_left_arm_02 |
+| barbarian_02_default | left_hand | common_left_hand_02 |
+| barbarian_02_default | right_arm | common_right_arm_02 |
+| barbarian_02_default | right_hand | common_right_hand_02 |
+| barbarian_02_default | left_leg | common_left_leg_02 |
+| barbarian_02_default | right_leg | common_right_leg_02 |
+| barbarian_02_default | weapon | common_weapon_02 |
+| barbarian_02_default | shield | common_shield_02 |
 | barbarian_02_default | face | common_face_01 |
-| barbarian_03_default | body | barbarian_03_body |
-| barbarian_03_default | head | barbarian_03_head |
-| barbarian_03_default | left_arm | barbarian_03_left_arm |
-| barbarian_03_default | left_hand | barbarian_03_left_hand |
-| barbarian_03_default | right_arm | barbarian_03_right_arm |
-| barbarian_03_default | right_hand | barbarian_03_right_hand |
-| barbarian_03_default | left_leg | barbarian_03_left_leg |
-| barbarian_03_default | right_leg | barbarian_03_right_leg |
-| barbarian_03_default | weapon | barbarian_03_weapon |
-| barbarian_03_default | shield | barbarian_03_shield |
+| barbarian_03_default | body | common_body_03 |
+| barbarian_03_default | head | common_head_03 |
+| barbarian_03_default | left_arm | common_left_arm_03 |
+| barbarian_03_default | left_hand | common_left_hand_03 |
+| barbarian_03_default | right_arm | common_right_arm_03 |
+| barbarian_03_default | right_hand | common_right_hand_03 |
+| barbarian_03_default | left_leg | common_left_leg_03 |
+| barbarian_03_default | right_leg | common_right_leg_03 |
+| barbarian_03_default | weapon | common_weapon_03 |
+| barbarian_03_default | shield | common_shield_03 |
 | barbarian_03_default | face | common_face_01 |
